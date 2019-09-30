@@ -5,13 +5,15 @@ final class String_calculator {
 
   def add(input: String): String = {
     if (input.isEmpty) return "0"
-
-    val numbers = this.parse(input)
-    println("numbers", numbers.foreach(println))
-    println("is separator", isSeparator('\n'))
-    val sum = numbers.sum
-    println("sum", sum)
-    this.format(sum)
+    try {
+      val numbers = this.parse(input)
+      println("numbers", numbers.foreach(println))
+      val sum = numbers.sum
+      println("sum", sum)
+      this.format(sum)
+    } catch {
+      case ex: RuntimeException => return ex.getMessage
+    }
   }
 
   private def parse(input: String): Array[Double] = {
@@ -20,8 +22,9 @@ final class String_calculator {
     do {
       val (currentPosition, token) = this.nextToken(position, input)
       if (token.isEmpty) {
-        val c = input.charAt(currentPosition)
-        throw new RuntimeException(s"Number expected but $c found at position $currentPosition.")
+        position = currentPosition - 1
+        val c = input.charAt(position)
+        throw new RuntimeException(s"Number expected but '$c' found at position $position.")
       }
       println("next token", currentPosition, token.toDouble)
 

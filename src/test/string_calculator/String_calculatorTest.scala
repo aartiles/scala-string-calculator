@@ -80,5 +80,20 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       result shouldBe "14.3"
     }
 
+    "add identifies separator at invalid position" in {
+      Given("a String_calculator")
+
+      val string_calculator = new String_calculator
+
+      When("numbers have two consecutive separators")
+
+      val numbers = "175.2,\n35"
+      val result = string_calculator.add(numbers)
+
+      Then("it should return an error message")
+
+      result shouldBe "Number expected but '\n' found at position 6."
+    }
+
   }
 }
