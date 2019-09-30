@@ -50,21 +50,6 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       result shouldBe "5.0"
     }
 
-    "add a number and empty" in {
-      Given("a String_calculator")
-
-      val string_calculator = new String_calculator
-
-      When("numbers has number and empty")
-
-      val numbers = "3,"
-      val result = string_calculator.add(numbers)
-
-      Then("it should return the sum of the number and zero")
-
-      result shouldBe "3.0"
-    }
-
     "add unlimited numbers" in {
       Given("a String_calculator")
 
@@ -72,7 +57,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
 
       When("numbers has many numbers")
 
-      val numbers = "3,5.2,,4,2.1"
+      val numbers = "3,5.2,4,2.1"
       val result = string_calculator.add(numbers)
 
       Then("it should return the sum of all the numbers")
@@ -80,29 +65,14 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       result shouldBe "14.3"
     }
 
-    "add accept \n as numbers separator" in {
+    "add accept \\n as numbers separator" in {
       Given("a String_calculator")
 
       val string_calculator = new String_calculator
 
-      When("numbers separated by \n")
+      When("numbers separated by \\n")
 
-      val numbers = "3,5.2,,4\n2.1"
-      val result = string_calculator.add(numbers)
-
-      Then("it should return the sum of all the number")
-
-      result shouldBe "14.3"
-    }
-
-    "add identifies separator at invalid position" in {
-      Given("a String_calculator")
-
-      val string_calculator = new String_calculator
-
-      When("numbers separated by \n")
-
-      val numbers = "3,5.2,,4\n2.1"
+      val numbers = "3,5.2,4\n2.1"
       val result = string_calculator.add(numbers)
 
       Then("it should return the sum of all the number")
