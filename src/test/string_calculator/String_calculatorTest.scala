@@ -95,5 +95,20 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       result shouldBe "Number expected but '\n' found at position 6."
     }
 
+    "add don’t allow the input to end in a separator" in {
+      Given("a String_calculator")
+
+      val string_calculator = new String_calculator
+
+      When("numbers end in a separator")
+
+      val numbers = "1,3,"
+      val result = string_calculator.add(numbers)
+
+      Then("it should return an error message")
+
+      result shouldBe "Number expected but EOF found"
+    }
+
   }
 }

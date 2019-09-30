@@ -7,7 +7,6 @@ final class String_calculator {
     if (input.isEmpty) return "0"
     try {
       val numbers = this.parse(input)
-      println("numbers", numbers.foreach(println))
       val sum = numbers.sum
       println("sum", sum)
       this.format(sum)
@@ -29,8 +28,6 @@ final class String_calculator {
       println("next token", currentPosition, token.toDouble)
 
       numbers = numbers :+ token.toDouble
-      println("numbers._0", numbers(0))
-
       position = currentPosition
     }
     while (position < input.length)
@@ -42,6 +39,9 @@ final class String_calculator {
     var number = ""
     do {
       val c = input.charAt(currentPosition)
+      if (this.isSeparator(c) && currentPosition == input.length - 1) {
+        throw new RuntimeException("Number expected but EOF found")
+      }
       if (this.isSeparator(c)) return (currentPosition + 1, number)
       number += c
       currentPosition += 1
