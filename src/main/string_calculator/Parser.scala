@@ -33,7 +33,7 @@ final class Parser(val input: String, val delimiter: String = null) {
       else if (nextType == "number" && tokenType == "delimiter") {
         throw new RuntimeException(s"Number expected but '$token' found at position $prevPosition.")
       }
-      else if (nextType == "delimiter" && tokenType == "delimiter" && this.position > this.input.length - 1) {
+      else if (nextType == "delimiter" && tokenType == "delimiter" && this.isEOF) {
         throw new RuntimeException("Number expected but EOF found")
       }
       else {
@@ -41,7 +41,7 @@ final class Parser(val input: String, val delimiter: String = null) {
       }
 
     }
-    while (this.position < input.length)
+    while (!this.isEOF)
     numbers
   }
 
@@ -50,7 +50,7 @@ final class Parser(val input: String, val delimiter: String = null) {
     var tokenType = ""
 
     do {
-      val c = this.input.charAt(this.position)
+      val c = this.currentChar
 
       if (this.isNumeric(c) && (tokenType == "number" || tokenType.isEmpty)) {
         token += c
@@ -72,7 +72,7 @@ final class Parser(val input: String, val delimiter: String = null) {
       else return (token, "invalid")
 
     }
-    while (this.position < this.input.length)
+    while (!this.isEOF)
     return (token, tokenType)
   }
 
@@ -84,5 +84,9 @@ final class Parser(val input: String, val delimiter: String = null) {
   }
 
   private def isNumeric(c: Char): Boolean = "0123456789.".contains(c)
+
+  private def currentChar: Char = this.input.charAt(this.position)
+
+  private def isEOF: Boolean = this.position >= this.input.length
 
 }
