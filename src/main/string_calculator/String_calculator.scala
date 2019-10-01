@@ -4,9 +4,9 @@ final class String_calculator {
 
   def add(input: String): String = {
     if (input.isEmpty) return "0"
-    val parser = new Parser()
+    val parser = Parser.create(input)
     try {
-      val numbers = parser.parse(input)
+      val numbers = parser.parse
       val sum = numbers.sum
       this.format(sum)
     } catch {
