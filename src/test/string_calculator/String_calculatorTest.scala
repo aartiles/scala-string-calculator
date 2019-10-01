@@ -140,5 +140,20 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       result shouldBe "3.0"
     }
 
+    "add parser take into account a non default multi-character delimiter" in {
+      Given("a String_calculator")
+
+      val string_calculator = new String_calculator
+
+      When("numbers has a non default multi-character delimiter definition")
+
+      val numbers = "//sep\n2sep3"
+      val result = string_calculator.add(numbers)
+
+      Then("it should sum the numbers")
+
+      result shouldBe "5.0"
+    }
+
   }
 }
