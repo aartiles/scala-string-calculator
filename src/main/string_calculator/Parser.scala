@@ -1,9 +1,5 @@
 package string_calculator
 
-object TokenType extends Enumeration {
-  val Delimiter, Number, Invalid, None = Value
-}
-
 object Parser {
   def create(input: String): Parser = {
     val delimiterRegExp = """^//(.+)\n""".r.unanchored
@@ -29,16 +25,16 @@ final class Parser(val input: String, val delimiter: String = null) {
 
     do {
       val prevPosition = this.position
-      val (t.oken, tokenType) = this.nextToken
+      val token = this.nextToken
 
-      if (nextType == TokenType.Number && tokenType == TokenType.Number) {
-        numbers = numbers :+ token.toDouble
+      if (nextType == TokenType.Number && token.tokenType == TokenType.Number) {
+        numbers = numbers :+ token.value.toDouble
         nextType = TokenType.Delimiter
       }
-      else if (nextType == TokenType.Number && tokenType == TokenType.Delimiter) {
-        throw new RuntimeException(s"Number expected but '$token' found at position $prevPosition.")
+      else if (nextType == TokenType.Number && token.tokenType == TokenType.Delimiter) {
+        throw new RuntimeException(s"Number expected but '${token.value}' found at position $prevPosition.")
       }
-      else if (nextType == TokenType.Delimiter && tokenType == TokenType.Delimiter && this.isEOF) {
+      else if (nextType == TokenType.Delimiter && token.tokenType == TokenType.Delimiter && this.isEOF) {
         throw new RuntimeException("Number expected but EOF found")
       }
       else {
@@ -49,7 +45,7 @@ final class Parser(val input: String, val delimiter: String = null) {
     numbers
   }
 
-  private def nextToken: (String, TokenType.Value) = {
+  private def nextToken: Token = {
     var token = ""
     var tokenType = TokenType.None
 
@@ -62,22 +58,22 @@ final class Parser(val input: String, val delimiter: String = null) {
         this.position += 1
       }
       else if (!this.isNumeric(c) && tokenType == TokenType.Number) {
-        return (token, tokenType)
+        return new Token(token, tokenType)
       }
       else if (!this.isNumeric(c) && (tokenType == TokenType.Delimiter || tokenType == TokenType.None)) {
         token += c
         tokenType = TokenType.Delimiter
         this.position += 1
-        if (this.isDelimiter(token)) return (token, tokenType)
+        if (this.isDelimiter(token)) return  new Token(token, tokenType)
       }
       else if (this.isNumeric(c) && tokenType == TokenType.Delimiter) {
-        return (token, TokenType.None)
+        return new Token(token, TokenType.None)
       }
-      else return (token, TokenType.None)
+      else return  new Token(token, TokenType.None)
 
     }
     while (!this.isEOF)
-    return (token, tokenType)
+    return  new Token(token, tokenType)
   }
 
   private def isDelimiter(token: String): Boolean = {
