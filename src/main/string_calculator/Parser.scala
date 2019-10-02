@@ -15,7 +15,7 @@ object Parser {
   }
 }
 
-final class Parser(val input: String, val delimiter: String = null) {
+final class Parser private (val input: String, val delimiter: String = null) {
   private val DELIMITERS = Array("\n", ",")
   private var position = 0
 
@@ -56,24 +56,24 @@ final class Parser(val input: String, val delimiter: String = null) {
         token += c
         tokenType = TokenType.Number
         this.position += 1
+        if (this.isEOF) return Token.createNumber(token)
       }
       else if (!this.isNumeric(c) && tokenType == TokenType.Number) {
-        return new Token(token, tokenType)
+        return Token.createNumber(token)
       }
       else if (!this.isNumeric(c) && (tokenType == TokenType.Delimiter || tokenType == TokenType.None)) {
         token += c
         tokenType = TokenType.Delimiter
         this.position += 1
-        if (this.isDelimiter(token)) return  new Token(token, tokenType)
+        if (this.isDelimiter(token)) return  Token.createDelimiter(token)
       }
       else if (this.isNumeric(c) && tokenType == TokenType.Delimiter) {
-        return new Token(token, TokenType.None)
+        return Token.createInvalid(token)
       }
-      else return  new Token(token, TokenType.None)
-
+      else return Token.createInvalid(token)
     }
     while (!this.isEOF)
-    return  new Token(token, tokenType)
+    return Token.createInvalid(token)
   }
 
   private def isDelimiter(token: String): Boolean = {
