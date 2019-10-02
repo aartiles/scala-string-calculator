@@ -1,8 +1,13 @@
 package string_calculator
 
+object TokenType extends Enumeration {
+  val Delimiter, Number, Invalid, None = Value
+}
+
 object Parser {
   def create(input: String): Parser = {
     val delimiterRegExp = """^//(.+)\n""".r.unanchored
+
     input match {
       case delimiterRegExp(delimiter) => {
         new Parser(input.replaceAll(delimiterRegExp.toString, ""), delimiter)
@@ -19,57 +24,56 @@ final class Parser(val input: String, val delimiter: String = null) {
   private var position = 0
 
   def parse: Array[Double] = {
-    var nextType = "number"
+    var nextType = TokenType.Number
     var numbers = Array.empty[Double]
 
     do {
       val prevPosition = this.position
-      val (token, tokenType) = this.nextToken
+      val (t.oken, tokenType) = this.nextToken
 
-      if (nextType == "number" && tokenType == "number") {
+      if (nextType == TokenType.Number && tokenType == TokenType.Number) {
         numbers = numbers :+ token.toDouble
-        nextType = "delimiter"
+        nextType = TokenType.Delimiter
       }
-      else if (nextType == "number" && tokenType == "delimiter") {
+      else if (nextType == TokenType.Number && tokenType == TokenType.Delimiter) {
         throw new RuntimeException(s"Number expected but '$token' found at position $prevPosition.")
       }
-      else if (nextType == "delimiter" && tokenType == "delimiter" && this.isEOF) {
+      else if (nextType == TokenType.Delimiter && tokenType == TokenType.Delimiter && this.isEOF) {
         throw new RuntimeException("Number expected but EOF found")
       }
       else {
-        nextType = "number"
+        nextType = TokenType.Number
       }
-
     }
     while (!this.isEOF)
     numbers
   }
 
-  private def nextToken: (String, String) = {
+  private def nextToken: (String, TokenType.Value) = {
     var token = ""
-    var tokenType = ""
+    var tokenType = TokenType.None
 
     do {
       val c = this.currentChar
 
-      if (this.isNumeric(c) && (tokenType == "number" || tokenType.isEmpty)) {
+      if (this.isNumeric(c) && (tokenType == TokenType.Number || tokenType == TokenType.None)) {
         token += c
-        tokenType = "number"
+        tokenType = TokenType.Number
         this.position += 1
       }
-      else if (!this.isNumeric(c) && tokenType == "number") {
+      else if (!this.isNumeric(c) && tokenType == TokenType.Number) {
         return (token, tokenType)
       }
-      else if (!this.isNumeric(c) && (tokenType == "delimiter" || tokenType.isEmpty)) {
+      else if (!this.isNumeric(c) && (tokenType == TokenType.Delimiter || tokenType == TokenType.None)) {
         token += c
-        tokenType = "delimiter"
+        tokenType = TokenType.Delimiter
         this.position += 1
         if (this.isDelimiter(token)) return (token, tokenType)
       }
-      else if (this.isNumeric(c) && tokenType == "delimiter") {
-        return (token, "invalid")
+      else if (this.isNumeric(c) && tokenType == TokenType.Delimiter) {
+        return (token, TokenType.None)
       }
-      else return (token, "invalid")
+      else return (token, TokenType.None)
 
     }
     while (!this.isEOF)
