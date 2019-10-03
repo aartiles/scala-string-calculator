@@ -13,7 +13,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers is an empty string")
 
       val numbers = ""
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should return 0")
 
@@ -28,7 +28,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers is a single number")
 
       val numbers = "3"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should return the same number")
 
@@ -43,7 +43,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers has two numbers")
 
       val numbers = "3,2"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should return the sum of both numbers")
 
@@ -58,7 +58,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers has many numbers")
 
       val numbers = "3,5.2,4,2.1"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should return the sum of all the numbers")
 
@@ -73,7 +73,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers separated by \\n")
 
       val numbers = "3,5.2,4\n2.1"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should return the sum of all the number")
 
@@ -88,7 +88,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers have two consecutive separators")
 
       val numbers = "175.2,\n35"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should return an error message")
 
@@ -103,7 +103,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers end in a separator")
 
       val numbers = "1,3,"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should return an error message")
 
@@ -118,7 +118,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers has a delimiter definition")
 
       val numbers = "//,\n1,3"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should sum the numbers")
 
@@ -133,7 +133,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers has a non default delimiter definition")
 
       val numbers = "//;\n1;2"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should sum the numbers")
 
@@ -148,7 +148,7 @@ final class String_calculatorTest extends WordSpec with GivenWhenThen {
       When("numbers has a non default multi-character delimiter definition")
 
       val numbers = "//sep\n2sep3"
-      val result = string_calculator.add(numbers)
+      val result  = string_calculator.add(numbers)
 
       Then("it should sum the numbers")
 
