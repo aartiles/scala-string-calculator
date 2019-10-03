@@ -1,22 +1,23 @@
 package string_calculator
 
-final class String_calculator {
+import string_calculator.exceptions.{DuplicateDelimitersException, InvalidEOFException, InvalidLengthException}
 
-  def add(input: String): String = {
-    if (input.isEmpty) return "0"
-    val parser = Parser.create(input)
+class String_calculator(delimiters: Delimiters = Delimiters(List(",", "\\n"))) {
+
+  def add(numbers: String): String = {
     try {
-      val numbers = parser.parse
-      val sum = numbers.sum
-      this.format(sum)
+      val newDelimiters = delimiters.buildWithNewDelimiters(numbers)
+      val calculator    = new Calculate(newDelimiters)
+      val aResult       = calculator.run(numbers)
+      format(aResult)
     } catch {
-      case ex: RuntimeException => return ex.getMessage
+      case e: InvalidLengthException       => "0"
+      case e: DuplicateDelimitersException => e.msg
+      case e: InvalidEOFException          => e.msg
     }
   }
 
-  private def format(n: Double): String = this.roundAt(2)(n).toString
-
-  private def roundAt(p: Int)(n: Double): Double = {
-    val s = math pow (10, p); (math round n * s) / s
+  private def format(number: Double): String = {
+    BigDecimal(number).setScale(1, BigDecimal.RoundingMode.HALF_UP).toString()
   }
 }
